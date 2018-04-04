@@ -51,10 +51,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         do {
             let csv = try CSV(contentsOfURL: path)
             let rows = csv.rows
-            print(rows)
             
             for row in rows {
-                
                 let pokeID = Int(row["id"]!)!
                 let name = row["identifier"]!
                 
