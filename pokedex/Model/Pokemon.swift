@@ -22,6 +22,7 @@ class Pokemon {
     private var _nextEvoTxt: String!
     private var _pokemonURL: String!
     private var _pokemonDescURL: String!
+    private var _pokemonEvoURL: String!
     
     var description: String {
         if _description == nil {
@@ -84,6 +85,7 @@ class Pokemon {
         self._pokedexID = pokedexID
         self._pokemonURL = "\(URL_BASE)\(URL_POKEMON)\(self.pokedexID)/"
         self._pokemonDescURL = "\(URL_BASE)\(URL_DESCRIPTION)\(self.pokedexID)"
+        self._pokemonEvoURL = "\(URL_BASE)\(URL_EVOLUTION)\(self.pokedexID)"
     }
     
     func downloadPokemonDetail(completed: @escaping DownloadComplete) {
@@ -137,6 +139,26 @@ class Pokemon {
                 }
             } else {
                 self._description = ""
+            }
+            completed()
+        }
+    }
+    
+    func downloadEvoDescription(completed: @escaping DownloadComplete) {
+        Alamofire.request(_pokemonEvoURL).responseJSON { response in
+            if let dict = response.result.value as? Dictionary<String, AnyObject> {
+                if let chain = dict["chain"] as? Dictionary<String, AnyObject> {
+                    if let evo = chain["evolves_to"] as? [Dictionary<String, AnyObject>] {
+                        if let species = evo[0]["species"] as? Dictionary<String, String> {
+                            if let name = species["name"] {
+                                self._nextEvoTxt = name.capitalized
+                                print(self._nextEvoTxt)
+                            }
+                        }
+                    }
+                }
+            } else {
+                self._nextEvoTxt = ""
             }
             completed()
         }

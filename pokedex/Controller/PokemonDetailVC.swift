@@ -41,6 +41,9 @@ class PokemonDetailVC: UIViewController {
         pokemon.downloadPokemonDescription {
             self.updateDesc()
         }
+        pokemon.downloadEvoDescription {
+            self.updateEvo()
+        }
     }
     
     func updateUI() {
@@ -53,6 +56,9 @@ class PokemonDetailVC: UIViewController {
     
     func updateDesc() {
         descriptionLbl.text = pokemon.description
+    }
+    func updateEvo() {
+        evoLbl.text = pokemon.nextEvoTxt
     }
     
     @IBAction func backBtnPressed(_ sender: UIButton) {
